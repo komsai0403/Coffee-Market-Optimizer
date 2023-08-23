@@ -167,60 +167,57 @@ def calculate():
       (trader_fc_profit + other_markets_fc_profit) - (total_cost)
         )
 
-    return input_cost, m_labor_cost, m_postproduction_cost, total_m_bound_cost
+  return input_cost, m_labor_cost, m_postproduction_cost, total_m_bound_cost
   
     
-  def calculate_profit(traders_allocation, other_markets_allocation):
-      total_input_cost = fertilizer1_cost*fertilizer1_kilo + fertilizer2_cost*fertilizer2_kilo + organic_cost*organic_kilo + herbicides_cost*herbicides_kilo + pesticide_cost*pesticide_kilo
-      total_labor_cost = (m_pruning * pruning_cost + m_fertilizing * fertilizing_cost + m_spraying * spraying_cost + m_weeding * weeding_cost + m_harvesting * harvesting_cost + m_rejuvenation * rejuvenation_cost) * number_of_trees
-      total_cost = total_input_cost + total_labor_cost + other_cost
+def calculate_profit(traders_allocation, other_markets_allocation):
+  total_input_cost = fertilizer1_cost*fertilizer1_kilo + fertilizer2_cost*fertilizer2_kilo + organic_cost*organic_kilo + herbicides_cost*herbicides_kilo + pesticide_cost*pesticide_kilo
+  total_labor_cost = (m_pruning * pruning_cost + m_fertilizing * fertilizing_cost + m_spraying * spraying_cost + m_weeding * weeding_cost + m_harvesting * harvesting_cost + m_rejuvenation * rejuvenation_cost) * number_of_trees
+  total_cost = total_input_cost + total_labor_cost + other_cost
 
-      # Calculate profits from selling fresh coffee cherries to local traders and other markets
-      trader_fc_profit = (traders_allocation * amount_fresh) * trader_fc_price
-      other_markets_fc_profit = (other_markets_allocation * amount_fresh) * other_markets_fc_price
+  # Calculate profits from selling fresh coffee cherries to local traders and other markets
+  trader_fc_profit = (traders_allocation * amount_fresh) * trader_fc_price
+  other_markets_fc_profit = (other_markets_allocation * amount_fresh) * other_markets_fc_price
 
-      # Calculate total profit
-      total_profit = (trader_fc_profit + other_markets_fc_profit) - (total_cost)
+  # Calculate total profit
+  total_profit = (trader_fc_profit + other_markets_fc_profit) - (total_cost)
 
-      return total_profit
+  return total_profit
     
-  def optimize_market_allocations():
-      variables = ['traders_allocation', 'other_markets_allocation']
-      values = np.linspace(0, 1, num=21)  # num=11 (0.1), num=101 (0.01), num=21 (0.05)
+def optimize_market_allocations():
+  variables = ['traders_allocation', 'other_markets_allocation']
+  values = np.linspace(0, 1, num=21)  # num=11 (0.1), num=101 (0.01), num=21 (0.05)
 
-      # define a generator function to generate possible combinations of market allocation with intervals as defined in the values variable
-      def market_allocation_generator():
-          # generates all possible combinations of the elements in the values variable with a length equal to the number of markets
-          for combo in product(values, repeat=len(variables)):
-            # assign values to the markets by pairing the markets to the combination of values generated
-            allocation = dict(zip(variables, combo))
-            # restriction to ensure market allocation is equal to 1
-              if sum(allocation.values()) == 1:
-                yield allocation
+  # define a generator function to generate possible combinations of market allocation with intervals as defined in the values variable
+  def market_allocation_generator():
+    # generates all possible combinations of the elements in the values variable with a length equal to the number of markets
+    for combo in product(values, repeat=len(variables)):
+    # assign values to the markets by pairing the markets to the combination of values generated
+    allocation = dict(zip(variables, combo))
+    # restriction to ensure market allocation is equal to 1
+      if sum(allocation.values()) == 1:
+        yield allocation
 
-        # create a list for the market allocations
-        market_allocations = list(market_allocation_generator())
-        num_allocations = len(market_allocations)
-        profits = np.zeros(num_allocations)
+      # create a list for the market allocations
+      market_allocations = list(market_allocation_generator())
+      num_allocations = len(market_allocations)
+      profits = np.zeros(num_allocations)
 
-        max_profit = 0  # Initialize maximum profit
-        max_profit_case = market_allocations[0]  # Initialize with the first allocation
-        max_profit_value = calculate_profit(**max_profit_case)
+      max_profit = 0  # Initialize maximum profit
+      max_profit_case = market_allocations[0]  # Initialize with the first allocation
+      max_profit_value = calculate_profit(**max_profit_case)
 
-        # Calculate profits for each market allocation
-        for i, case in enumerate(market_allocations):
-            profits[i] = calculate_profit(**case)
-            if profits[i] > max_profit_value:
-                max_profit_value = profits[i]
-                max_profit_case = case
+      # Calculate profits for each market allocation
+      for i, case in enumerate(market_allocations):
+        profits[i] = calculate_profit(**case)
+        if profits[i] > max_profit_value:
+          max_profit_value = profits[i]
+          max_profit_case = case
 
-        # Print overall maximum profit
-        print("\nOverall Maximum Profit:")
-        print(f"Market Allocation: {max_profit_case}")
-        print(f"Maximum Profit: {max_profit_value}")
-
-    optimize_market_allocations()
-
+      # Print overall maximum profit
+      print("\nOverall Maximum Profit:")
+      print(f"Market Allocation: {max_profit_case}")
+      print(f"Maximum Profit: {max_profit_value}")
 
 if st.button("Optimize") = optimize_market_allocations()
 
