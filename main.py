@@ -166,7 +166,6 @@ def calculate():
     total_profit = (
       (trader_fc_profit + other_markets_fc_profit) - (total_cost)
         )
-
   return input_cost, m_labor_cost, m_postproduction_cost, total_m_bound_cost
   
     
