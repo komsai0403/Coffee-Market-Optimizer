@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.title("Coffee Market Optimizer")
+st.title("Coffee Production Cost Calculator")
 st.write("---")
 
 #initialize values
