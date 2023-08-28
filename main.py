@@ -21,15 +21,139 @@ spraying = 0
 harvesting = 0
 rejuvenation = 0
 weeding = 0
+max_profit = 0
+percent_othermarkets = 0
+percent_bigcompaniesgcb = 0
+percent_coopgcb = 0
+percent_othermarketsgcb = 0
+percent_traders = 0
+percent_tradersgcb = 0
+price_coopgcb = 0
+price_bigcompaniesgcb = 0
+price_othermarkets = 0
+price_othermarketsgcb = 0
+price_tradersgcb = 0
+price_traders = 0
+coop_gcb_profit = 0
+trader_fc_profit = 0
+traders_gcb_profit = 0
+other_markets_fc_profit = 0
+big_companies_gcb_profit = 0
+other_markets_gcb_profit = 0
 
 coffee_trees = st.number_input(label="How many coffee trees are there in your farm?", min_value=1, step=1)
 coffee_variety = st.radio("Select the variety of your Coffee:",
                           ("Robusta", "Arabica", "Excelsa"))
 coffee_type = st.radio("Select the type of Coffee you will sell:",
                        ("Fresh", "Green Coffee Beans", "Both"))
-amount_fc = st.number_input(label="Enter the total amount of fresh coffee cherries you have harvested (in kilos)", min_value=0.00, step=0.05)
-if coffee_type == "Green Coffee Beans" or coffee_type == "Both":
-    amount_gcb = st.number_input(label="Enter the amount of coffee cherries you have successfully converted to Green Coffee Beans (in kilos)", min_value=0.00, step=0.05)
+if coffee_type == "Green Coffee Beans":
+    amount_fc = st.number_input(label="Enter the total amount of fresh coffee cherries you will sell (in kilos)", min_value=0.00, step=0.5)
+    amount_gcb = st.number_input(label="Enter the amount of Green Coffee Beans you will sell (in kilos)", min_value=0.00, step=0.5)
+    sellto_bigcompaniesgcb = st.radio("Will you sell to Big Companies?",
+                              ("Yes", "No"))
+    if sellto_bigcompaniesgcb == "Yes":
+        percent_bigcompaniesgcb = st.number_input(label="Enter the percentage of Green Coffee Beans to be allocated to Big Companies in kilograms (kg)", min_value=0, max_value=100, step=10)
+        price_bigcompaniesgcb = st.number_input(label="Enter the price of Green Coffee Beans when sold to Big Companies in pesos (php)", min_value=0, step=1)
+    elif sellto_bigcompaniesgcb == "No":
+        percent_bigcompaniesgcb = 0
+        price_bigcompaniesgcb = 0
+    sellto_tradersgcb = st.radio("Will you sell to Traders?",
+                              ("Yes", "No"))
+    if sellto_tradersgcb == "Yes":
+        percent_tradersgcb = st.number_input(label="Enter the percentage of Green Coffee Beans to be allocated to Traders in kilograms (kg)", min_value=0, max_value=100, step=10)
+        price_tradersgcb = st.number_input(label="Enter the price of Green Coffee Beans when sold to Traders in pesos (php)", min_value=0, step=1)
+    elif sellto_tradersgcb == "No":
+        percent_tradersgcb = 0
+        price_tradersgcb = 0
+    sellto_othermarketsgcb = st.radio("Will you sell to Other Markets?",
+                              ("Yes", "No"))
+    if sellto_othermarketsgcb == "Yes":
+        percent_othermarketsgcb = st.number_input(label="Enter the percentage of Green Coffee Beans to be allocated to Other Markets in kilograms (kg)", min_value=0, max_value=100, step=10)
+        price_othermarketsgcb = st.number_input(label="Enter the price of Green Coffee Beans when sold to Other Markets in pesos (php)", min_value=0, step=1)
+    elif sellto_othermarketsgcb == "No":
+        percent_othermarketsgcb = 0
+        price_othermarketsgcb = 0
+    sellto_coopgcb = st.radio("Will you sell to a Cooperative?",
+                              ("Yes", "No"))
+    if sellto_coopgcb == "Yes":
+        percent_coopgcb = st.number_input(label="Enter the percentage of Green Coffee Beans to be allocated to the Cooperative in kilograms (kg)", min_value=0, max_value=100, step=10)
+        price_coopgcb = st.number_input(label="Enter the price of Green Coffee Beans when sold to the Cooperative in pesos (php)", min_value=0, step=1)
+    elif sellto_coopgcb == "No":
+        percent_coopgcb = 0
+        price_coopgcb = 0
+if coffee_type == "Both":
+    amount_fc = st.number_input(label="Enter the total amount of fresh coffee cherries you will sell (in kilos)", min_value=0.00, step=0.5)
+    amount_gcb = st.number_input(label="Enter the amount of Green Coffee Beans you will sell (in kilos)", min_value=0.00, step=0.5)
+    sellto_traders = st.radio("Will you sell fresh cherries to Traders?",
+                              ("Yes", "No"))
+    if sellto_traders == "Yes":
+        percent_traders = st.number_input(label="Enter the percentage of Fresh Coffee Cherries to be allocated to Traders in kilograms (kg)", min_value=0, max_value=100, step=10)
+        price_traders = st.number_input(label="Enter the price of Fresh Coffee Cherries when sold to Traders in pesos (php)", min_value=0, step=1)
+    elif sellto_traders == "No":
+        percent_traders = 0
+        price_traders = 0
+    sellto_othermarkets = st.radio("Will you sell fresh cherries to Other Markets?",
+                              ("Yes", "No"))
+    if sellto_othermarkets == "Yes":
+        percent_othermarkets = st.number_input(label="Enter the percentage of Fresh Coffee Cherries to be allocated to Other Markets in kilograms (kg)", min_value=0, max_value=100, step=10)
+        price_othermarkets = st.number_input(label="Enter the price of Fresh Coffee Cherries when sold to Other Markets in pesos (php)", min_value=0, step=1)
+    elif sellto_othermarkets == "No":
+        percent_othermarkets = 0
+        price_othermarkets = 0
+    sellto_bigcompaniesgcb = st.radio("Will you sell green coffee beans to Big Companies?",
+                              ("Yes", "No"))
+    if sellto_bigcompaniesgcb == "Yes":
+        percent_bigcompaniesgcb = st.number_input(label="Enter the percentage of Green Coffee Beans to be allocated to Big Companies in kilograms (kg)", min_value=0, max_value=100, step=10)
+        price_bigcompaniesgcb = st.number_input(label="Enter the price of Green Coffee Beans when sold to Big Companies in pesos (php)", min_value=0, step=1)
+    elif sellto_bigcompaniesgcb == "No":
+        percent_bigcompaniesgcb = 0
+        price_bigcompaniesgcb = 0
+    sellto_tradersgcb = st.radio("Will you sell green coffee beans to Traders?",
+                              ("Yes", "No"))
+    if sellto_tradersgcb == "Yes":
+        percent_tradersgcb = st.number_input(label="Enter the percentage of Green Coffee Beans to be allocated to Traders in kilograms (kg)", min_value=0, max_value=100, step=10)
+        price_tradersgcb = st.number_input(label="Enter the price of Green Coffee Beans when sold to Traders in pesos (php)", min_value=0, step=1)
+    elif sellto_tradersgcb == "No":
+        percent_tradersgcb = 0
+        price_tradersgcb = 0
+    sellto_othermarketsgcb = st.radio("Will you sell green coffee beans to Other Markets?",
+                              ("Yes", "No"))
+    if sellto_othermarketsgcb == "Yes":
+        percent_othermarketsgcb = st.number_input(label="Enter the percentage of Green Coffee Beans to be allocated to Other Markets in kilograms (kg)", min_value=0, max_value=100, step=10)
+        price_othermarketsgcb = st.number_input(label="Enter the price of Green Coffee Beans when sold to Other Markets in pesos (php)", min_value=0, step=1)
+    elif sellto_othermarketsgcb == "No":
+        percent_othermarketsgcb = 0
+        price_othermarketsgcb = 0
+    sellto_coopgcb = st.radio("Will you sell green coffee beans to a Cooperative?",
+                              ("Yes", "No"))
+    if sellto_coopgcb == "Yes":
+        percent_coopgcb = st.number_input(label="Enter the percentage of Green Coffee Beans to be allocated to the Cooperative in kilograms (kg)", min_value=0, max_value=100, step=10)
+        price_coopgcb = st.number_input(label="Enter the price of Green Coffee Beans when sold to the Cooperative in pesos (php)", min_value=0, step=1)
+    elif sellto_coopgcb == "No":
+        percent_coopgcb = 0
+        price_coopgcb = 0
+if coffee_type == "Fresh":
+    amount_fc = st.number_input(label="Enter the total amount of fresh coffee cherries you will sell (in kilos)", min_value=0.00, step=0.5)
+    amount_gcb = 0
+    sellto_traders = st.radio("Will you sell to Traders?",
+                              ("Yes", "No"))
+    if sellto_traders == "Yes":
+        percent_traders = st.number_input(label="Enter the percentage of Fresh Coffee Cherries to be allocated to Traders in kilograms (kg)", min_value=0, max_value=100, step=10)
+        price_traders = st.number_input(label="Enter the price of Fresh Coffee Cherries when sold to Traders in pesos (php)", min_value=0, step=1)
+    elif sellto_traders == "No":
+        percent_traders = 0
+        price_traders = 0
+    sellto_othermarkets = st.radio("Will you sell to Other Markets?",
+                              ("Yes", "No"))
+    if sellto_othermarkets == "Yes":
+        percent_othermarkets = st.number_input(label="Enter the percentage of Fresh Coffee Cherries to be allocated to Other Markets in kilograms (kg)", min_value=0, max_value=100, step=10)
+        price_othermarkets = st.number_input(label="Enter the price of Fresh Coffee Cherries when sold to Other Markets in pesos (php)", min_value=0, step=1)
+    elif sellto_othermarkets == "No":
+        percent_othermarkets = 0
+        price_othermarkets = 0
+type_of_allocation = st.radio("Should all markets have an allocation?:",
+                          ("Yes", "No"))
+amount_coffee = amount_gcb + amount_fc
 
 if coffee_variety == "Robusta":
     m_hauling = 2.5
@@ -134,8 +258,114 @@ transport = st.radio("Did you incur any labor costs for Transportation?:", ("Yes
 transport = 1 if transport == "Yes" else 0
 other_cost = st.number_input(label="Enter the amount you spent for other costs: ", min_value=0.00, step=0.05)
 
+if coffee_type == "Both":
+    input_cost = (
+            fertilizer1 * fertilizer1qty +
+            fertilizer2 * fertilizer2qty +
+            organic_fertilizer * organic_fertilizer_qty +
+            herbicide * herbicide_qty +
+            pesticide * pesticide_qty
+        )
+    m_labor_cost = (
+            (m_pruning * pruning + m_fertilizing * fertilizing +
+            m_spraying * spraying + m_weeding * weeding +
+            m_harvesting * harvesting + m_rejuvenation * rejuvenation) * coffee_trees
+        )
+    m_postproduction_cost = (
+            (m_hauling * hauling + m_floating * floating +
+            m_depulping * depulping + m_drying * drying +
+            m_dehulling * dehulling + m_sorting * sorting +
+            m_storage * storage) * amount_gcb
+        )
+    total_cost = (
+            input_cost + m_labor_cost + m_postproduction_cost + other_cost + (m_transport * transport * amount_coffee)
+        )
+    trader_fc_profit = (
+            (percent_traders / 100 * amount_fc) * price_traders
+        )
+    other_markets_fc_profit = (
+            (percent_othermarkets / 100 * amount_fc) * price_othermarkets
+        )
+    big_companies_gcb_profit = (
+            (percent_bigcompaniesgcb / 100 * amount_gcb) * price_bigcompaniesgcb
+    )
+    traders_gcb_profit = (
+            (percent_tradersgcb / 100 * amount_gcb) * price_tradersgcb
+    )
+    other_markets_gcb_profit = (
+            (percent_othermarketsgcb / 100 * amount_gcb) * price_othermarketsgcb
+    )
+    coop_gcb_profit = (
+            (percent_coopgcb / 100 * amount_gcb) * price_coopgcb
+    )
+    total_profit = (
+            (trader_fc_profit + other_markets_fc_profit + big_companies_gcb_profit + traders_gcb_profit + other_markets_gcb_profit + coop_gcb_profit) - (total_cost)
+        )
+    
+if coffee_type == "Fresh":
+    input_cost = (
+            fertilizer1 * fertilizer1qty +
+            fertilizer2 * fertilizer2qty +
+            organic_fertilizer * organic_fertilizer_qty +
+            herbicide * herbicide_qty +
+            pesticide * pesticide_qty
+        )
+    m_labor_cost = (
+            (m_pruning * pruning + m_fertilizing * fertilizing +
+            m_spraying * spraying + m_weeding * weeding +
+            m_harvesting * harvesting + m_rejuvenation * rejuvenation) * coffee_trees
+        )
+    total_cost = (
+            input_cost + m_labor_cost + other_cost + (m_transport * transport * amount_coffee)
+        )
+    trader_fc_profit = (
+            (percent_traders / 100 * amount_fc) * price_traders
+        )
+    other_markets_fc_profit = (
+            (percent_othermarkets / 100 * amount_fc) * price_othermarkets
+        )
+    total_profit = (
+            (trader_fc_profit + other_markets_fc_profit ) - (total_cost)
+        )
+if coffee_type == "Green Coffee Beans":
+    input_cost = (
+            fertilizer1 * fertilizer1qty +
+            fertilizer2 * fertilizer2qty +
+            organic_fertilizer * organic_fertilizer_qty +
+            herbicide * herbicide_qty +
+            pesticide * pesticide_qty
+        )
+    m_labor_cost = (
+            (m_pruning * pruning + m_fertilizing * fertilizing +
+            m_spraying * spraying + m_weeding * weeding +
+            m_harvesting * harvesting + m_rejuvenation * rejuvenation) * coffee_trees
+        )
+    m_postproduction_cost = (
+            (m_hauling * hauling + m_floating * floating +
+            m_depulping * depulping + m_drying * drying +
+            m_dehulling * dehulling + m_sorting * sorting +
+            m_storage * storage) * amount_gcb
+        )
+    total_cost = (
+            input_cost + m_labor_cost + m_postproduction_cost + other_cost + (m_transport * transport * amount_coffee)
+        )
+    big_companies_gcb_profit = (
+            (percent_bigcompaniesgcb / 100 * amount_gcb) * price_bigcompaniesgcb
+    )
+    traders_gcb_profit = (
+            (percent_tradersgcb / 100 * amount_gcb) * price_tradersgcb
+    )
+    other_markets_gcb_profit = (
+            (percent_othermarketsgcb / 100 * amount_gcb) * price_othermarketsgcb
+    )
+    coop_gcb_profit = (
+            (percent_coopgcb / 100 * amount_gcb) * price_coopgcb
+    )
+    total_profit = (
+            (big_companies_gcb_profit + traders_gcb_profit + other_markets_gcb_profit + coop_gcb_profit) - (total_cost)
+        )
 
-def calculate():
+def calculate_profit_both(percent_traders, percent_othermarkets, percent_bigcompaniesgcb, percent_coopgcb, percent_othermarketsgcb, percent_tradersgcb):
     input_cost = (
         fertilizer1 * fertilizer1qty +
         fertilizer2 * fertilizer2qty +
@@ -154,81 +384,196 @@ def calculate():
          m_dehulling * dehulling + m_sorting * sorting +
          m_storage * storage) * amount_gcb
     )
-    total_m_bound_cost = (
-        input_cost + m_labor_cost + m_labor_cost + other_cost + (m_transport * transport * amount_fc)
+    total_cost = (
+        input_cost + m_labor_cost + m_postproduction_cost + other_cost + (m_transport * transport * amount_coffee)
     )
     trader_fc_profit = (
-        (traders_allocation / 100 * amount_fresh) * trader_fc_price
+        (percent_traders * amount_fc) * price_traders
     )
     other_markets_fc_profit = (
-        (other_markets_allocation / 100 * amount_fresh) * other_markets_fc_price
+        (percent_othermarkets * amount_fc) * price_othermarkets
+    )
+    big_companies_gcb_profit = (
+        (percent_bigcompaniesgcb * amount_gcb) * price_bigcompaniesgcb
+    )
+    traders_gcb_profit = (
+        (percent_tradersgcb * amount_gcb) * price_tradersgcb
+    )
+    other_markets_gcb_profit = (
+        (percent_othermarketsgcb * amount_gcb) * price_othermarketsgcb
+    )
+    coop_gcb_profit = (
+        (percent_coopgcb * amount_gcb) * price_coopgcb
+    )
+    total_profit = (
+        (trader_fc_profit + other_markets_fc_profit + big_companies_gcb_profit + traders_gcb_profit + other_markets_gcb_profit + coop_gcb_profit) - (total_cost)
+    )
+    return total_profit
+
+def calculate_profit_fresh(percent_traders, percent_othermarkets):
+    input_cost = (
+        fertilizer1 * fertilizer1qty +
+        fertilizer2 * fertilizer2qty +
+        organic_fertilizer * organic_fertilizer_qty +
+        herbicide * herbicide_qty +
+        pesticide * pesticide_qty
+    )
+    m_labor_cost = (
+        (m_pruning * pruning + m_fertilizing * fertilizing +
+         m_spraying * spraying + m_weeding * weeding +
+         m_harvesting * harvesting + m_rejuvenation * rejuvenation) * coffee_trees
+    )
+    total_cost = (
+        input_cost + m_labor_cost + other_cost + (m_transport * transport * amount_coffee)
+    )
+    trader_fc_profit = (
+        (percent_traders * amount_fc) * price_traders
+    )
+    other_markets_fc_profit = (
+        (percent_othermarkets * amount_fc) * price_othermarkets
     )
     total_profit = (
         (trader_fc_profit + other_markets_fc_profit) - (total_cost)
     )
-    return input_cost, m_labor_cost, m_postproduction_cost, total_m_bound_cost
+    return total_profit
 
-
-def calculate_profit(traders_allocation, other_markets_allocation):
-    total_input_cost = (
-        fertilizer1_cost * fertilizer1_kilo + fertilizer2_cost * fertilizer2_kilo +
-        organic_cost * organic_kilo + herbicides_cost * herbicides_kilo +
-        pesticide_cost * pesticide_kilo
+def calculate_profit_gcb(percent_bigcompaniesgcb, percent_coopgcb, percent_othermarketsgcb, percent_tradersgcb):
+    input_cost = (
+        fertilizer1 * fertilizer1qty +
+        fertilizer2 * fertilizer2qty +
+        organic_fertilizer * organic_fertilizer_qty +
+        herbicide * herbicide_qty +
+        pesticide * pesticide_qty
     )
-    total_labor_cost = (
-        (m_pruning * pruning_cost + m_fertilizing * fertilizing_cost +
-         m_spraying * spraying_cost + m_weeding * weeding_cost +
-         m_harvesting * harvesting_cost + m_rejuvenation * rejuvenation_cost) * number_of_trees
+    m_labor_cost = (
+        (m_pruning * pruning + m_fertilizing * fertilizing +
+         m_spraying * spraying + m_weeding * weeding +
+         m_harvesting * harvesting + m_rejuvenation * rejuvenation) * coffee_trees
     )
-    total_cost = total_input_cost + total_labor_cost + other_cost
-
-    # Calculate profits from selling fresh coffee cherries to local traders and other markets
-    trader_fc_profit = (traders_allocation * amount_fresh) * trader_fc_price
-    other_markets_fc_profit = (other_markets_allocation * amount_fresh) * other_markets_fc_price
-
-    # Calculate total profit
-    total_profit = (trader_fc_profit + other_markets_fc_profit) - (total_cost)
-
+    m_postproduction_cost = (
+        (m_hauling * hauling + m_floating * floating +
+         m_depulping * depulping + m_drying * drying +
+         m_dehulling * dehulling + m_sorting * sorting +
+         m_storage * storage) * amount_gcb
+    )
+    total_cost = (
+        input_cost + m_labor_cost + m_postproduction_cost + other_cost + (m_transport * transport * amount_coffee)
+    )
+    big_companies_gcb_profit = (
+        (percent_bigcompaniesgcb * amount_gcb) * price_bigcompaniesgcb
+    )
+    traders_gcb_profit = (
+        (percent_tradersgcb * amount_gcb) * price_tradersgcb
+    )
+    other_markets_gcb_profit = (
+        (percent_othermarketsgcb * amount_gcb) * price_othermarketsgcb
+    )
+    coop_gcb_profit = (
+        (percent_coopgcb * amount_gcb) * price_coopgcb
+    )
+    total_profit = (
+        (big_companies_gcb_profit + traders_gcb_profit + other_markets_gcb_profit + coop_gcb_profit) - (total_cost)
+    )
     return total_profit
 
 
 def optimize_market_allocations():
-    variables = ['traders_allocation', 'other_markets_allocation']
-    values = np.linspace(0, 1, num=21)  # num=11 (0.1), num=101 (0.01), num=21 (0.05)
+    if coffee_type == "Fresh":
+        variables = ['percent_traders', 'percent_othermarkets']
+    if coffee_type == "Green Coffee Beans":
+        variables = ['percent_bigcompaniesgcb', 'percent_coopgcb', 'percent_othermarketsgcb', 'percent_tradersgcb']
+    if coffee_type == "Both":
+        variables = ['percent_traders', 'percent_othermarkets', 'percent_bigcompaniesgcb', 'percent_coopgcb', 'percent_othermarketsgcb', 'percent_tradersgcb']
+    values = np.linspace(0, 1, num=11)  # num=11 (0.1), num=101 (0.01), num=21 (0.05)
 
     # Define a generator function to generate possible combinations of market allocation with intervals
     def market_allocation_generator():
         # Generates all possible combinations of the elements in the values variable
-        for combo in product(values, repeat=len(variables)):
-            # Assign values to the markets by pairing the markets to the combination of values generated
-            allocation = dict(zip(variables, combo))
-            # Restriction to ensure market allocation is equal to 1
-            if sum(allocation.values()) == 1:
-                yield allocation
+        if type_of_allocation == "No":
+            for combo in product(values, repeat=len(variables)):
+                # Assign values to the markets by pairing the markets to the combination of values generated
+                allocation = dict(zip(variables, combo))
+                # Restriction to ensure market allocation is equal to 1
+                if sum(allocation.values()) == 1:
+                    yield allocation
+        
+        elif type_of_allocation == "Yes":
+            for combo in product(values, repeat=len(variables)):
+                # Assign values to the markets by pairing the markets to the combination of values generated
+                allocation = dict(zip(variables, combo))
+                # Check if all allocations have values
+                if all(value > 0 for value in allocation.values()):
+                    # Restriction to ensure market allocation is equal to 1
+                    if sum(allocation.values()) == 1:
+                        yield allocation
 
     # Create a list for the market allocations
     market_allocations = list(market_allocation_generator())
     num_allocations = len(market_allocations)
     profits = np.zeros(num_allocations)
 
-    max_profit = 0  # Initialize maximum profit
     max_profit_case = market_allocations[0]  # Initialize with the first allocation
-    max_profit_value = calculate_profit(**max_profit_case)
+    if coffee_type == "Fresh":
+        max_profit_value = calculate_profit_fresh(**max_profit_case)
+    if coffee_type == "Green Coffee Beans":
+        max_profit_value = calculate_profit_gcb(**max_profit_case)
+    if coffee_type == "Both":
+        max_profit_value = calculate_profit_both(**max_profit_case)
 
     # Calculate profits for each market allocation
     for i, case in enumerate(market_allocations):
-        profits[i] = calculate_profit(**case)
+        if coffee_type == "Fresh":
+            profits[i] = calculate_profit_fresh(**case)
+        if coffee_type == "Green Coffee Beans":
+            profits[i] = calculate_profit_gcb(**case)
+        if coffee_type == "Both":
+            profits[i] = calculate_profit_both(**case)
         if profits[i] > max_profit_value:
             max_profit_value = profits[i]
             max_profit_case = case
 
     # Print overall maximum profit
-    print("\nOverall Maximum Profit:")
-    print(f"Market Allocation: {max_profit_case}")
-    print(f"Maximum Profit: {max_profit_value}")
-
+    st.write("Optimized Market Allocation:")
+    if coffee_type == "Both":
+        st.write("Traders (Fresh):", max_profit_case['percent_traders'] * 100, "%")
+        st.write("Other Markets (Fresh):", max_profit_case['percent_othermarkets'] * 100, "%")
+        st.write("Cooperative (GCB): ", max_profit_case['percent_coopgcb'] * 100, "%")
+        st.write("Big Companies (GCB): ", max_profit_case['percent_bigcompaniesgcb'] * 100, "%")
+        st.write("Traders (GCB): ", max_profit_case['percent_tradersgcb'] * 100, "%")
+        st.write("Other Markets (GCB): ", max_profit_case['percent_othermarketsgcb'] * 100, "%")
+        st.write("Maximum Profit: ", max_profit_value, "php")
+    if coffee_type == "Fresh":
+        st.write("Traders (Fresh):", max_profit_case['percent_traders'] * 100, "%")
+        st.write("Other Markets (Fresh):", max_profit_case['percent_othermarkets'] * 100, "%")
+        st.write("Maximum Profit: ", max_profit_value, "php")
+    if coffee_type == "Green Coffee Beans":
+        st.write("Cooperative (GCB): ", max_profit_case['percent_coopgcb'] * 100, "%")
+        st.write("Big Companies (GCB): ", max_profit_case['percent_bigcompaniesgcb'] * 100, "%")
+        st.write("Traders (GCB): ", max_profit_case['percent_tradersgcb'] * 100, "%")
+        st.write("Other Markets (GCB): ", max_profit_case['percent_othermarketsgcb'] * 100, "%")
+        st.write("Maximum Profit: ", max_profit_value, "php")
 
 if st.button("Optimize"):
+    st.write("Results:")
+    if coffee_type == "Both":
+        st.write("Desired allocation:")
+        st.write("Traders (Fresh): ", percent_traders, "%")
+        st.write("Other Marketsc (Fresh): ", percent_othermarkets, "%")
+        st.write("Cooperative (GCB): ", percent_coopgcb, "%")
+        st.write("Big Companies (GCB): ", percent_bigcompaniesgcb, "%")
+        st.write("Traders (GCB): ", percent_tradersgcb, "%")
+        st.write("Other Markets (GCB): ", percent_othermarketsgcb, "%")
+        st.write("Estimated Total Profit: ", total_profit, "php")
+    if coffee_type == "Fresh":
+        st.write("Desired allocation:")
+        st.write("Traders (Fresh): ", percent_traders, "%")
+        st.write("Other Marketsc (Fresh): ", percent_othermarkets, "%")
+        st.write("Estimated Total Profit: ", total_profit, "php")
+    if coffee_type == "Green Coffee Beans":
+        st.write("Desired allocation:")
+        st.write("Cooperative (GCB): ", percent_coopgcb, "%")
+        st.write("Big Companies (GCB): ", percent_bigcompaniesgcb, "%")
+        st.write("Traders (GCB): ", percent_tradersgcb, "%")
+        st.write("Other Markets (GCB): ", percent_othermarketsgcb, "%")
+        st.write("Estimated Total Profit: ", total_profit, "php")
     optimize_market_allocations()
-
-
