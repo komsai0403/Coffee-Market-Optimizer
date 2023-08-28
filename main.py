@@ -280,23 +280,25 @@ if coffee_type == "Both":
     total_cost = (
             input_cost + m_labor_cost + m_postproduction_cost + other_cost + (m_transport * transport * amount_coffee)
         )
+    total_percentfc = percent_traders + percent_othermarkets
     trader_fc_profit = (
-            (percent_traders / 100 * amount_fc) * price_traders
+            ((percent_traders/total_percentfc) / 100 * amount_fc) * price_traders
         )
     other_markets_fc_profit = (
-            (percent_othermarkets / 100 * amount_fc) * price_othermarkets
+            ((percent_othermarkets/total_percentfc) / 100 * amount_fc) * price_othermarkets
         )
     big_companies_gcb_profit = (
             (percent_bigcompaniesgcb / 100 * amount_gcb) * price_bigcompaniesgcb
     )
+    total_percentgc = percent_tradersgcb + percent_othermarketsgcb + percent_coopgcb
     traders_gcb_profit = (
-            (percent_tradersgcb / 100 * amount_gcb) * price_tradersgcb
+            ((percent_tradersgcb/total_percentgc) / 100 * amount_gcb) * price_tradersgcb
     )
     other_markets_gcb_profit = (
-            (percent_othermarketsgcb / 100 * amount_gcb) * price_othermarketsgcb
+            ((percent_othermarketsgcb/total_percentgc) / 100 * amount_gcb) * price_othermarketsgcb
     )
     coop_gcb_profit = (
-            (percent_coopgcb / 100 * amount_gcb) * price_coopgcb
+            ((percent_coopgcb/total_percentgc) / 100 * amount_gcb) * price_coopgcb
     )
     total_profit = (
             (trader_fc_profit + other_markets_fc_profit + big_companies_gcb_profit + traders_gcb_profit + other_markets_gcb_profit + coop_gcb_profit) - (total_cost)
@@ -387,24 +389,36 @@ def calculate_profit_both(percent_traders, percent_othermarkets, percent_bigcomp
     total_cost = (
         input_cost + m_labor_cost + m_postproduction_cost + other_cost + (m_transport * transport * amount_coffee)
     )
-    trader_fc_profit = (
-        (percent_traders * amount_fc) * price_traders
-    )
-    other_markets_fc_profit = (
-        (percent_othermarkets * amount_fc) * price_othermarkets
-    )
-    big_companies_gcb_profit = (
-        (percent_bigcompaniesgcb * amount_gcb) * price_bigcompaniesgcb
-    )
-    traders_gcb_profit = (
-        (percent_tradersgcb * amount_gcb) * price_tradersgcb
-    )
-    other_markets_gcb_profit = (
-        (percent_othermarketsgcb * amount_gcb) * price_othermarketsgcb
-    )
-    coop_gcb_profit = (
-        (percent_coopgcb * amount_gcb) * price_coopgcb
-    )
+    total_percentfc = percent_traders + percent_othermarkets
+    total_percentgc = percent_tradersgcb + percent_othermarketsgcb + percent_coopgcb
+    if total_percentfc > 0:
+        trader_fc_profit = (
+            ((percent_traders/total_percentfc) * amount_fc) * price_traders
+        )
+        other_markets_fc_profit = (
+            ((percent_othermarkets/total_percentfc) * amount_fc) * price_othermarkets
+        )
+    if total_percentfc == 0:
+        trader_fc_profit = 0
+        other_markets_fc_profit = 0
+    if total_percentgc > 0:
+        big_companies_gcb_profit = (
+            ((percent_bigcompaniesgcb/total_percentgc) * amount_gcb) * price_bigcompaniesgcb
+        )
+        traders_gcb_profit = (
+            ((percent_tradersgcb/total_percentgc) * amount_gcb) * price_tradersgcb
+        )
+        other_markets_gcb_profit = (
+            ((percent_othermarketsgcb/total_percentgc) * amount_gcb) * price_othermarketsgcb
+        )
+        coop_gcb_profit = (
+            ((percent_coopgcb/total_percentgc) * amount_gcb) * price_coopgcb
+        )
+    if total_percentgc == 0:
+        big_companies_gcb_profit = 0
+        traders_gcb_profit = 0
+        other_markets_gcb_profit = 0
+        coop_gcb_profit = 0
     total_profit = (
         (trader_fc_profit + other_markets_fc_profit + big_companies_gcb_profit + traders_gcb_profit + other_markets_gcb_profit + coop_gcb_profit) - (total_cost)
     )
