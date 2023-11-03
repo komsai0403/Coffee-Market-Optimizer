@@ -94,6 +94,9 @@ if coffee_type == "Green Coffee Beans":
     elif sellto_coopgcb == "No":
         percent_coopgcb = 0
         price_coopgcb = 0
+    st.subheader("Type of Allocation")
+    type_of_allocation = st.radio("Should all markets have an allocation?:",
+                            ("No", "Yes"))
 if coffee_type == "Both":
     amount_fc = st.number_input(label="Enter the total amount of fresh coffee cherries you will sell (in kilos)", min_value=0.00, step=0.5)
     amount_gcb = st.number_input(label="Enter the amount of Green Coffee Beans you will sell (in kilos)", min_value=0.00, step=0.5)
@@ -157,6 +160,7 @@ if coffee_type == "Both":
     elif sellto_coopgcb == "No":
         percent_coopgcb = 0
         price_coopgcb = 0
+    type_of_allocation =  "Yes"
 if coffee_type == "Fresh":
     st.header("Selling Fresh Cherries:")
     amount_fc = st.number_input(label="Enter the total amount of fresh coffee cherries you will sell (in kilos)", min_value=0.00, step=0.5)
@@ -179,9 +183,13 @@ if coffee_type == "Fresh":
     elif sellto_othermarkets == "No":
         percent_othermarkets = 0
         price_othermarkets = 0
-#type_of_allocation = st.radio("Should all markets have an allocation?:",
-#                          ("Yes", "No"))
+    st.subheader("Type of Allocation")
+    type_of_allocation = st.radio("Should all markets have an allocation?:",
+                            ("No", "Yes"))
+
 amount_coffee = amount_gcb + amount_fc
+total_percentfc = percent_traders + percent_othermarkets
+total_percentgc = percent_bigcompaniesgcb + percent_tradersgcb + percent_othermarketsgcb + percent_coopgcb
 
 if coffee_variety == "Robusta":
     m_hauling = 2.5
@@ -534,23 +542,23 @@ def optimize_market_allocations():
     # Define a generator function to generate possible combinations of market allocation with intervals
     def market_allocation_generator():
         # Generates all possible combinations of the elements in the values variable
-        #if type_of_allocation == "No":
-        #    for combo in product(values, repeat=len(variables)):
+        if type_of_allocation == "No":
+            for combo in product(values, repeat=len(variables)):
                 # Assign values to the markets by pairing the markets to the combination of values generated
-        #        allocation = dict(zip(variables, combo))
-                # Restriction to ensure market allocation is equal to 1
-        #        if sum(allocation.values()) == 1:
-        #            yield allocation
-        
-        #if type_of_allocation == "Yes":
-        for combo in product(values, repeat=len(variables)):
-            # Assign values to the markets by pairing the markets to the combination of values generated
-            allocation = dict(zip(variables, combo))
-            # Check if all allocations have values
-            if all(value > 0 for value in allocation.values()):
+                allocation = dict(zip(variables, combo))
                 # Restriction to ensure market allocation is equal to 1
                 if sum(allocation.values()) == 1:
                     yield allocation
+        
+        elif type_of_allocation == "Yes":
+            for combo in product(values, repeat=len(variables)):
+                # Assign values to the markets by pairing the markets to the combination of values generated
+                allocation = dict(zip(variables, combo))
+                # Check if all allocations have values
+                if all(value > 0 for value in allocation.values()):
+                    # Restriction to ensure market allocation is equal to 1
+                    if sum(allocation.values()) == 1:
+                        yield allocation
 
     # Create a list for the market allocations
     market_allocations = list(market_allocation_generator())
@@ -578,66 +586,86 @@ def optimize_market_allocations():
             max_profit_case = case
 
     # Print overall maximum profit
-    st.subheader(f"Optimized Market Allocation:")
     if coffee_type == "Both":
-        total_percentfc1 = max_profit_case['percent_traders'] * 100 + max_profit_case['percent_othermarkets'] * 100 if max_profit_case['percent_traders'] and max_profit_case['percent_othermarkets'] > 0 else 1
-        st.subheader(f"Fresh Cherries Allocation:")
-        st.write(f"Traders (Fresh):", round((((max_profit_case['percent_traders'] * 100) / total_percentfc1) * 100), 2), "%")
-        st.write(f"Other Markets (Fresh):", round((((max_profit_case['percent_othermarkets'] * 100) / total_percentfc1) * 100), 2), "%")
-        st.subheader(f"Green Coffee Beans Allocation:")
-        #if type_of_allocation == "Yes":
-        total_percentgc1 = max_profit_case['percent_coopgcb'] * 100 + max_profit_case['percent_bigcompaniesgcb'] * 100 + max_profit_case['percent_tradersgcb'] * 100 + max_profit_case['percent_othermarketsgcb'] * 100 if max_profit_case['percent_traders'] and max_profit_case['percent_othermarkets'] > 0 else 1
-        st.write(f"Cooperative (GCB): ", round(((max_profit_case['percent_coopgcb'] * 100 / total_percentgc1) * 100), 2), "%")
-        st.write(f"Big Companies (GCB): ", round(((max_profit_case['percent_bigcompaniesgcb'] * 100 / total_percentgc1) * 100), 2), "%")
-        st.write(f"Traders (GCB): ", round(((max_profit_case['percent_tradersgcb'] * 100 / total_percentgc1) * 100), 2), "%")
-        st.write(f"Other Markets (GCB): ", round(((max_profit_case['percent_othermarketsgcb'] * 100 / total_percentgc1) * 100), 2), "%")
-        st.markdown(f"<b>Maximum Profit: ₱{max_profit_value:.2f}</b>", unsafe_allow_html=True)
-        #elif type_of_allocation == "No":
-        #    total_percentgc1 = max_profit_case['percent_coopgcb'] * 100 + max_profit_case['percent_bigcompaniesgcb'] * 100 + max_profit_case['percent_tradersgcb'] * 100 + max_profit_case['percent_othermarketsgcb'] * 100 if max_profit_case['percent_traders'] and max_profit_case['percent_othermarkets'] > 0 else 1
-        #    st.write(f"Cooperative (GCB): ", round((max_profit_case['percent_coopgcb'] * 100 / total_percentgc1), 2), "%")
-        #    st.write(f"Big Companies (GCB): ", round((max_profit_case['percent_bigcompaniesgcb'] * 100 / total_percentgc1), 2), "%")
-        #    st.write(f"Traders (GCB): ", round((max_profit_case['percent_tradersgcb'] * 100 / total_percentgc1), 2), "%")
-        #    st.write(f"Other Markets (GCB): ", round((max_profit_case['percent_othermarketsgcb'] * 100 / total_percentgc1), 2), "%")
-        #    st.markdown(f"<b>Maximum Profit: ₱{max_profit_value:.2f}</b>", unsafe_allow_html=True)
+        if total_percentfc != 100 and total_percentgc != 100:
+            st.warning("The allocation percentages for Fresh Cherries and Green Coffee Beans must each add up to 100%. Please adjust your allocations.")
+        else:
+            st.subheader(f"Optimized Market Allocation:")
+            total_percentfc1 = max_profit_case['percent_traders'] * 100 + max_profit_case['percent_othermarkets'] * 100 if max_profit_case['percent_traders'] and max_profit_case['percent_othermarkets'] > 0 else 1
+            st.subheader(f"Fresh Cherries Allocation:")
+            st.write(f"Traders (Fresh):", round((((max_profit_case['percent_traders'] * 100) / total_percentfc1) * 100), 2), "%")
+            st.write(f"Other Markets (Fresh):", round((((max_profit_case['percent_othermarkets'] * 100) / total_percentfc1) * 100), 2), "%")
+            st.subheader(f"Green Coffee Beans Allocation:")
+            if type_of_allocation == "Yes":
+                total_percentgc1 = max_profit_case['percent_coopgcb'] * 100 + max_profit_case['percent_bigcompaniesgcb'] * 100 + max_profit_case['percent_tradersgcb'] * 100 + max_profit_case['percent_othermarketsgcb'] * 100 if max_profit_case['percent_traders'] and max_profit_case['percent_othermarkets'] > 0 else 1
+                st.write(f"Cooperative (GCB): ", round(((max_profit_case['percent_coopgcb'] * 100 / total_percentgc1) * 100), 2), "%")
+                st.write(f"Big Companies (GCB): ", round(((max_profit_case['percent_bigcompaniesgcb'] * 100 / total_percentgc1) * 100), 2), "%")
+                st.write(f"Traders (GCB): ", round(((max_profit_case['percent_tradersgcb'] * 100 / total_percentgc1) * 100), 2), "%")
+                st.write(f"Other Markets (GCB): ", round(((max_profit_case['percent_othermarketsgcb'] * 100 / total_percentgc1) * 100), 2), "%")
+                st.markdown(f"<b>Maximum Profit: ₱{max_profit_value:.2f}</b>", unsafe_allow_html=True)
+            elif type_of_allocation == "No":
+                total_percentgc1 = max_profit_case['percent_coopgcb'] * 100 + max_profit_case['percent_bigcompaniesgcb'] * 100 + max_profit_case['percent_tradersgcb'] * 100 + max_profit_case['percent_othermarketsgcb'] * 100 if max_profit_case['percent_traders'] and max_profit_case['percent_othermarkets'] > 0 else 1
+                st.write(f"Cooperative (GCB): ", round((max_profit_case['percent_coopgcb'] * 100 / total_percentgc1), 2), "%")
+                st.write(f"Big Companies (GCB): ", round((max_profit_case['percent_bigcompaniesgcb'] * 100 / total_percentgc1), 2), "%")
+                st.write(f"Traders (GCB): ", round((max_profit_case['percent_tradersgcb'] * 100 / total_percentgc1), 2), "%")
+                st.write(f"Other Markets (GCB): ", round((max_profit_case['percent_othermarketsgcb'] * 100 / total_percentgc1), 2), "%")
+                st.markdown(f"<b>Maximum Profit: ₱{max_profit_value:.2f}</b>", unsafe_allow_html=True)
     if coffee_type == "Fresh":
-        st.write(f"Traders (Fresh):", max_profit_case['percent_traders'] * 100, "%")
-        st.write(f"Other Markets (Fresh):", max_profit_case['percent_othermarkets'] * 100, "%")
-        st.markdown(f"<b>Maximum Profit: ₱{max_profit_value:.2f}</b>", unsafe_allow_html=True)
+        if total_percentfc != 100:
+            st.warning("The allocation percentages for Fresh Cherries must add up to 100%. Please adjust your allocations.")
+        else:
+            st.subheader(f"Optimized Market Allocation:")
+            st.write(f"Traders (Fresh):", max_profit_case['percent_traders'] * 100, "%")
+            st.write(f"Other Markets (Fresh):", max_profit_case['percent_othermarkets'] * 100, "%")
+            st.markdown(f"<b>Maximum Profit: ₱{max_profit_value:.2f}</b>", unsafe_allow_html=True)
     if coffee_type == "Green Coffee Beans":
-        st.write(f"Cooperative (GCB): ", max_profit_case['percent_coopgcb'] * 100, "%")
-        st.write(f"Big Companies (GCB): ", max_profit_case['percent_bigcompaniesgcb'] * 100, "%")
-        st.write(f"Traders (GCB): ", max_profit_case['percent_tradersgcb'] * 100, "%")
-        st.write(f"Other Markets (GCB): ", max_profit_case['percent_othermarketsgcb'] * 100, "%")
-        st.markdown(f"<b>Maximum Profit: ₱{max_profit_value:.2f}</b>", unsafe_allow_html=True)
+        if total_percentgc != 100:
+            st.warning("The allocation percentages for Green Coffee Beans must add up to 100%. Please adjust your allocations.")
+        else:
+            st.subheader(f"Optimized Market Allocation:")
+            st.write(f"Cooperative (GCB): ", max_profit_case['percent_coopgcb'] * 100, "%")
+            st.write(f"Big Companies (GCB): ", max_profit_case['percent_bigcompaniesgcb'] * 100, "%")
+            st.write(f"Traders (GCB): ", max_profit_case['percent_tradersgcb'] * 100, "%")
+            st.write(f"Other Markets (GCB): ", max_profit_case['percent_othermarketsgcb'] * 100, "%")
+            st.markdown(f"<b>Maximum Profit: ₱{max_profit_value:.2f}</b>", unsafe_allow_html=True)
 
 if st.button("Optimize"):
     if coffee_type == "Both":
-        st.subheader(f"Desired allocation:")
-        st.subheader(f"Fresh Cherries Allocation:")
-        st.write(f"Traders (Fresh): ", (percent_traders/total_percentfc)*100, "%")
-        st.write(f"Other Marketsc (Fresh): ", (percent_othermarkets/total_percentfc)*100, "%")
-        st.subheader(f"Green Coffee Beans Allocation:")
-        st.write(f"Cooperative (GCB): ", (percent_coopgcb/total_percentgc)*100, "%")
-        st.write(f"Big Companies (GCB): ", (percent_bigcompaniesgcb/total_percentgc)*100, "%")
-        st.write(f"Traders (GCB): ", (percent_tradersgcb/total_percentgc)*100, "%")
-        st.write(f"Other Markets (GCB): ", (percent_othermarketsgcb/total_percentgc)*100, "%")
-        st.markdown(f"<b>Estimated Total Profit: ₱{total_profit:.2f}</b>", unsafe_allow_html=True)
-        st.write(f"\n")
-        st.write(f"\n")
+        if total_percentfc != 100 and total_percentgc != 100:
+            st.markdown(f"<b>Error:</b>", unsafe_allow_html=True)
+        else:
+            st.subheader(f"Desired allocation:")
+            st.subheader(f"Fresh Cherries Allocation:")
+            st.write(f"Traders (Fresh): ", (percent_traders/total_percentfc)*100, "%")
+            st.write(f"Other Marketsc (Fresh): ", (percent_othermarkets/total_percentfc)*100, "%")
+            st.subheader(f"Green Coffee Beans Allocation:")
+            st.write(f"Cooperative (GCB): ", (percent_coopgcb/total_percentgc)*100, "%")
+            st.write(f"Big Companies (GCB): ", (percent_bigcompaniesgcb/total_percentgc)*100, "%")
+            st.write(f"Traders (GCB): ", (percent_tradersgcb/total_percentgc)*100, "%")
+            st.write(f"Other Markets (GCB): ", (percent_othermarketsgcb/total_percentgc)*100, "%")
+            st.markdown(f"<b>Estimated Total Profit: ₱{total_profit:.2f}</b>", unsafe_allow_html=True)
+            st.write(f"\n")
+            st.write(f"\n")
     if coffee_type == "Fresh":
-        st.subheader(f"Desired allocation:")
-        st.write(f"Traders (Fresh): ", percent_traders, "%")
-        st.write(f"Other Marketsc (Fresh): ", percent_othermarkets, "%")
-        st.markdown(f"<b>Estimated Total Profit: ₱{total_profit:.2f}</b>", unsafe_allow_html=True)
-        st.write(f"\n")
-        st.write(f"\n")
+        if total_percentfc != 100:
+            st.markdown(f"<b>Error:</b>", unsafe_allow_html=True)
+        else:
+            st.subheader(f"Desired allocation:")
+            st.write(f"Traders (Fresh): ", percent_traders, "%")
+            st.write(f"Other Marketsc (Fresh): ", percent_othermarkets, "%")
+            st.markdown(f"<b>Estimated Total Profit: ₱{total_profit:.2f}</b>", unsafe_allow_html=True)
+            st.write(f"\n")
+            st.write(f"\n")
     if coffee_type == "Green Coffee Beans":
-        st.subheader(f"Desired allocation:")
-        st.write(f"Cooperative (GCB): ", percent_coopgcb, "%")
-        st.write(f"Big Companies (GCB): ", percent_bigcompaniesgcb, "%")
-        st.write(f"Traders (GCB): ", percent_tradersgcb, "%")
-        st.write(f"Other Markets (GCB): ", percent_othermarketsgcb, "%")
-        st.markdown(f"<b>Estimated Total Profit: ₱{total_profit:.2f}</b>", unsafe_allow_html=True)
-        st.write(f"\n")
-        st.write(f"\n")
+        if total_percentgc != 100:
+            st.markdown(f"<b>Error:</b>", unsafe_allow_html=True)
+        else:
+            st.subheader(f"Desired allocation:")
+            st.write(f"Cooperative (GCB): ", percent_coopgcb, "%")
+            st.write(f"Big Companies (GCB): ", percent_bigcompaniesgcb, "%")
+            st.write(f"Traders (GCB): ", percent_tradersgcb, "%")
+            st.write(f"Other Markets (GCB): ", percent_othermarketsgcb, "%")
+            st.markdown(f"<b>Estimated Total Profit: ₱{total_profit:.2f}</b>", unsafe_allow_html=True)
+            st.write(f"\n")
+            st.write(f"\n")
     optimize_market_allocations()
